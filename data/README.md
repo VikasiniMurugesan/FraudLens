@@ -16,7 +16,7 @@ and place it at `data/creditcard.csv`.
 - `Class`: 1 = fraud, 0 = genuine
 
 ### Limitations
-- No merchant name
+- No merchant name,no real dates,no customer history,no location
 - It is easy to achieve 98.83% accuracy my marking all the transactions as not fraud but that is not what we expect here so accuracy is a bad metric
 
 ### Citation
