@@ -1,0 +1,28 @@
+# Virtual environment
+.venv/
+venv/
+
+# Python caches
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Secrets and local settings
+.env
+*.pem
+*.key
+credentials*.json
+
+# Datasets we must not redistribute (see data/README.md)
+data/creditcard.csv
+data/raw/
+
+# Generated artifacts (decision on committing the model comes later)
+models/*.joblib
+models/*.pkl
+
+# Editor / OS clutter
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
