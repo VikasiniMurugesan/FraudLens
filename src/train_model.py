@@ -1,10 +1,12 @@
 """Train and evaluate fraud models."""
 
 import config
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (average_precision_score, confusion_matrix,
                              f1_score, precision_score, recall_score,
                              roc_auc_score)
+
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -21,7 +23,13 @@ def build_baseline() -> Pipeline:
         ("model", LogisticRegression(class_weight="balanced", max_iter=1000,
                                      random_state=config.RANDOM_SEED)),
     ])
-
+def build_random_forest() -> Pipeline:
+    return Pipeline([
+        ("model", RandomForestClassifier(
+            n_estimators=100, max_depth=12, min_samples_leaf=5,
+            class_weight="balanced_subsample", n_jobs=-1,
+            random_state=config.RANDOM_SEED)),
+    ])
 
 def evaluate(model, X, y, threshold: float = 0.5) -> dict:
     """Score a fitted model on (X, y) and return the key metrics."""
