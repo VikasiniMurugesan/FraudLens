@@ -85,4 +85,7 @@ st.plotly_chart(fig, use_container_width=True)
 st.subheader("Flagged transactions")
 show = ["risk_score", "risk_category"] + [c for c in ("Time", "Amount", "Class") if c in scored.columns]
 flagged = scored[scored["flagged"]].sort_values("risk_score", ascending=False)
-st.dataframe(flagged[show], use_container_width=True)
+if flagged.empty:
+    st.info("No transactions in this file were flagged for review.")
+else:
+    st.dataframe(flagged[show], use_container_width=True)
