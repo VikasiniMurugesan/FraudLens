@@ -78,6 +78,8 @@ fig = px.bar(
     labels={"x": "Risk category", "y": "Transactions (log scale)"},
     title="Transactions by risk category",
 )
+fig.update_yaxes(dtick=1)
+fig.update_traces(texttemplate="%{y:,}", textposition="outside")
 st.plotly_chart(fig, use_container_width=True)
 
 st.subheader("Flagged transactions")
