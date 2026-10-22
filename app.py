@@ -9,6 +9,7 @@ import streamlit as st
 from src.data_loader import load_public_dataset
 from src.predict import load_bundle, score_transactions
 from src.preprocessing import time_based_split
+from src.explainability import explain_transaction, reason_to_text
 
 logging.basicConfig(level=logging.INFO)
 st.set_page_config(page_title="FraudLens", layout="wide")
@@ -109,7 +110,22 @@ if "Class" in scored.columns:
     label = "Fraud" if int(row["Class"]) == 1 else "Not fraud"
     st.write(f"**Confirmed label in the data:** {label}")
 
+st.subheader("Why was this flagged?")
+try:
+    reasons = explain_transaction(row, bundle)
+except ValueError as err:
+    st.warning(str(err))
+else:
+    if reasons:
+        for reason in reasons:
+            st.write("- " + reason_to_text(reason))
+    else:
+        st.write("No single feature stands out on its own for this transaction.")
+
 st.caption(
     "The score ranks this transaction against others. It is not a probability of fraud. "
-    "Per-feature explanations are added in a later step."
+    "Reasons show how many score points disappear when one feature is set to its "
+    "typical training value. They describe what the model used, not what causes "
+    "fraud, and several features working together can be understated. "
+    "V1 to V28 are anonymized, so they cannot be read as real-world attributes."
 )
