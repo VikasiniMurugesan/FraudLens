@@ -73,8 +73,10 @@ def train_and_save(threshold: float = 0.3) -> dict:
     }
 
     config.MODELS_DIR.mkdir(exist_ok=True)
+    reference = train[FEATURE_COLUMNS].median().to_dict()
     joblib.dump({"pipeline": model, "features": FEATURE_COLUMNS,
-                 "threshold": threshold}, config.MODEL_PATH)
+                 "threshold": threshold, "reference": reference},
+                config.MODEL_PATH)
     config.METRICS_PATH.write_text(json.dumps(results, indent=2))
     return results
 
