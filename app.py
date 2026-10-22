@@ -85,7 +85,31 @@ st.plotly_chart(fig, use_container_width=True)
 st.subheader("Flagged transactions")
 show = ["risk_score", "risk_category"] + [c for c in ("Time", "Amount", "Class") if c in scored.columns]
 flagged = scored[scored["flagged"]].sort_values("risk_score", ascending=False)
+
 if flagged.empty:
     st.info("No transactions in this file were flagged for review.")
-else:
-    st.dataframe(flagged[show], use_container_width=True)
+    st.stop()
+
+st.dataframe(flagged[show], use_container_width=True)
+
+st.subheader("Transaction details")
+chosen = st.selectbox(
+    "Select a flagged transaction",
+    options=flagged.index.tolist(),
+    format_func=lambda i: f"Row {i} (score {flagged.loc[i, 'risk_score']:.1f})",
+)
+row = scored.loc[chosen]
+
+d1, d2, d3 = st.columns(3)
+d1.metric("Risk score (0 to 100)", f"{row['risk_score']:.1f}")
+d2.metric("Risk category", str(row["risk_category"]).title())
+d3.metric("Amount", f"{row['Amount']:,.2f}")
+
+if "Class" in scored.columns:
+    label = "Fraud" if int(row["Class"]) == 1 else "Not fraud"
+    st.write(f"**Confirmed label in the data:** {label}")
+
+st.caption(
+    "The score ranks this transaction against others. It is not a probability of fraud. "
+    "Per-feature explanations are added in a later step."
+)
