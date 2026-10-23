@@ -48,3 +48,37 @@ def load_public_dataset(path: Path = config.PUBLIC_DATASET_PATH,
         df = df.drop_duplicates().reset_index(drop=True)
         logger.info("Dropped %d duplicate rows", before - len(df))
     return df
+def read_transactions_csv(source, required_columns: list[str],
+                          max_rows: int = 200_000) -> pd.DataFrame:
+    """Read an uploaded CSV and raise a clear ValueError if it is unusable.
+
+    `source` can be a path or a file-like object (Streamlit's uploader).
+    """
+    try:
+        df = pd.read_csv(source)
+    except pd.errors.EmptyDataError:
+        raise ValueError("The file is empty") from None
+    except (pd.errors.ParserError, UnicodeDecodeError):
+        raise ValueError("The file could not be read as a CSV") from None
+
+    if df.empty:
+        raise ValueError("The file has a header but no rows")
+    if len(df) > max_rows:
+        raise ValueError(f"File has {len(df):,} rows; the limit is {max_rows:,}")
+
+    validate_columns(df, required_columns)
+
+    non_numeric = []
+    for col in required_columns:
+        converted = pd.to_numeric(df[col], errors="coerce")
+        if (converted.isna() & df[col].notna()).any():
+            non_numeric.append(col)
+        df[col] = converted
+    if non_numeric:
+        raise ValueError(f"Non-numeric values in columns: {non_numeric}")
+
+    if df[required_columns].isna().any().any():
+        raise ValueError("Required columns contain missing values")
+    if "Amount" in df.columns and (df["Amount"] < 0).any():
+        raise ValueError("Amount contains negative values")
+    return df
