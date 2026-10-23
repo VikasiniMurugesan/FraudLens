@@ -81,7 +81,7 @@ fig = px.bar(
 )
 fig.update_yaxes(dtick=1)
 fig.update_traces(texttemplate="%{y:,}", textposition="outside")
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, width="stretch")
 
 st.subheader("Flagged transactions")
 show = ["risk_score", "risk_category"] + [c for c in ("Time", "Amount", "Class") if c in scored.columns]
@@ -91,7 +91,7 @@ if flagged.empty:
     st.info("No transactions in this file were flagged for review.")
     st.stop()
 
-st.dataframe(flagged[show], use_container_width=True)
+st.dataframe(flagged[show], width="stretch")
 
 st.subheader("Transaction details")
 chosen = st.selectbox(
@@ -104,7 +104,7 @@ row = scored.loc[chosen]
 d1, d2, d3 = st.columns(3)
 d1.metric("Risk score (0 to 100)", f"{row['risk_score']:.1f}")
 d2.metric("Risk category", str(row["risk_category"]).title())
-d3.metric("Amount", f"{row['Amount']:,.2f}")
+d3.metric("Amount", f"{row['Amount']:,.2f}" if "Amount" in row.index else "n/a")
 
 if "Class" in scored.columns:
     label = "Fraud" if int(row["Class"]) == 1 else "Not fraud"

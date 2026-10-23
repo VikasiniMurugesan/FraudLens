@@ -79,7 +79,7 @@ if view.empty:
 columns = ["risk_score", "risk_category", "flagged"] + [
     c for c in ("Time", "Amount", "Class") if c in view.columns
 ]
-st.dataframe(view[columns].head(MAX_TABLE_ROWS), use_container_width=True)
+st.dataframe(view[columns].head(MAX_TABLE_ROWS), width="stretch")
 if len(view) > MAX_TABLE_ROWS:
     st.caption(f"Table shows the top {MAX_TABLE_ROWS:,} by risk score. "
                "The download contains all matching rows.")
