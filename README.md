@@ -13,9 +13,10 @@ Card fraud is rare but expensive. Fewer than 0.2% of transactions in the dataset
 ## What it does
 
 - Scores transactions with a Random Forest and shows a 0 to 100 risk score with low, medium and high categories.
+- Runs out of the box in demo mode on simulated transactions, with a warning that results there only show the pipeline works.
 - Flags transactions at or above a threshold chosen on validation data.
 - Explains each flag by showing which features pushed the score up.
-- Lets you filter transactions, upload your own CSV with validation and clear error messages, and download results.
+- Lets you filter transactions by risk category, score range and date, upload your own CSV with validation and clear error messages, and download results.
 - Shows offline evaluation results on held-out data.
 
 ![Transaction Explorer](docs/screenshots/explorer.png)
@@ -65,9 +66,11 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-The trained model is included in `models/`. Without `data/creditcard.csv`, choose **Upload CSV** in the app and upload a file with columns `V1` to `V28` and `Amount`. The held-out test set option needs the Kaggle file.
+The app opens in demo mode, which scores simulated transactions with a small demo model, so no download is needed. For the real model, download the Kaggle file into `data/` and choose **Held-out test set**, or choose **Upload CSV** with columns `V1` to `V28` and `Amount`.
 
-To retrain: place the dataset in `data/` and run `python -m src.train_model`.
+To retrain the real model: place the dataset in `data/` and run `python -m src.train_model`.
+
+To retrain the demo model: `python -m src.train_demo`.
 
 ## Tests
 
@@ -75,7 +78,7 @@ To retrain: place the dataset in `data/` and run `python -m src.train_model`.
 pytest -q
 ```
 
-38 automated tests cover data validation, the time-based split, risk scoring, predictions, explanations and CSV upload checks.
+50 automated tests cover data validation, the time-based split, risk scoring, predictions, explanations, feature engineering and CSV upload checks.
 
 ## Project structure
 
@@ -85,13 +88,16 @@ pages/                      Transaction Explorer, Model Evaluation
 src/data_loader.py          loading and validation
 src/preprocessing.py        time-based split
 src/train_model.py          training and evaluation
-src/predict.py              scoring with the saved model
+src/predict.py              scoring with a saved model
 src/risk_scoring.py         0-100 score and categories
 src/explainability.py       per-transaction reasons
 src/synthetic_data.py       simulated demo transactions
+src/feature_engineering.py  features for the simulated demo data
+src/train_demo.py           trains the demo model on simulated data
+src/demo.py                 loads the demo model and data
 tests/                      pytest tests
 docs/screenshots/           images used in this README
-models/                     trained model and saved metrics
+models/                     trained models and saved metrics
 ```
 
 ## Limitations and ethics
@@ -99,8 +105,8 @@ models/                     trained model and saved metrics
 - Risk scores are rankings, not calibrated probabilities.
 - A flag is a reason for human review, not proof of fraud. False alarms inconvenience real customers.
 - The explanations show what the model relied on, not what causes fraud.
-- `data/sample_transactions.csv` is simulated, with fraud patterns planted by the generator, and is not scored by the real model.
+- `data/sample_transactions.csv` is simulated, with fraud patterns planted by the generator. It is scored by a separate demo model trained on simulated data, so its results show the pipeline works, not that the model detects real fraud.
 
 ## Future work
 
-A demo model for the simulated data so the app runs without the Kaggle file, calibrated probabilities, gradient boosting, SHAP explanations, an analyst alert workflow with saved decisions, drift monitoring, and a React and Spring Boot version.
+Calibrated probabilities, gradient boosting, SHAP explanations, an analyst alert workflow with saved decisions, drift monitoring, and a React and Spring Boot version.
