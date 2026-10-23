@@ -79,7 +79,26 @@ def train_and_save(threshold: float = 0.3) -> dict:
                 config.MODEL_PATH)
     config.METRICS_PATH.write_text(json.dumps(results, indent=2))
     return results
+def compare_candidates() -> dict:
+    """Score both candidate models on the validation set, each at its own
+    chosen threshold, and save the comparison. Does not overwrite the saved model."""
+    df = load_public_dataset()
+    train, val, _ = time_based_split(df)
+    X_tr, y_tr = train[FEATURE_COLUMNS], train[TARGET]
+    X_va, y_va = val[FEATURE_COLUMNS], val[TARGET]
 
+    candidates = {
+        "logistic_regression": (build_baseline(), 0.95),
+        "random_forest": (build_random_forest(), 0.3),
+    }
+    results = {}
+    for name, (model, threshold) in candidates.items():
+        model.fit(X_tr, y_tr)
+        results[name] = {"threshold": threshold,
+                         **evaluate(model, X_va, y_va, threshold)}
+
+    config.COMPARISON_PATH.write_text(json.dumps(results, indent=2))
+    return results
 
 if __name__ == "__main__":
     results = train_and_save()

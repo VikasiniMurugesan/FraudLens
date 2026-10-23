@@ -9,6 +9,7 @@ SAMPLE_CSV_PATH = DATA_DIR / "sample_transactions.csv"
 PUBLIC_DATASET_PATH = DATA_DIR / "creditcard.csv"  # downloaded by you, not committed
 MODEL_PATH = MODELS_DIR / "fraud_model.joblib"
 METRICS_PATH = MODELS_DIR / "metrics.json"
+COMPARISON_PATH = MODELS_DIR / "model_comparison.json"
 
 # --- Reproducibility -----------------------------------------------------
 RANDOM_SEED = 42
