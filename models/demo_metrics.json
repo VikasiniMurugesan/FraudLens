@@ -1,0 +1,17 @@
+{
+  "note": "SIMULATED data. Fraud patterns were planted by the generator, so these scores do not show real-world fraud detection ability.",
+  "train_rows": 20000,
+  "holdout_rows": 2000,
+  "holdout_frauds": 51,
+  "threshold": 0.3,
+  "holdout": {
+    "precision": 0.5581395348837209,
+    "recall": 0.9411764705882353,
+    "f1": 0.7007299270072993,
+    "pr_auc": 0.9373364909550609,
+    "roc_auc": 0.9875250254026701,
+    "false_positives": 38,
+    "false_negatives": 3,
+    "true_positives": 48
+  }
+}

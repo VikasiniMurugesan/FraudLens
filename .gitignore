@@ -20,6 +20,7 @@ data/raw/
 # Generated artifacts (decision on committing the model comes later)
 models/*.joblib
 !models/fraud_model.joblib
+!models/demo_model.joblib
 models/*.pkl
 
 # Editor / OS clutter

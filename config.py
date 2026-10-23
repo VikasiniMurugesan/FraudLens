@@ -10,7 +10,8 @@ PUBLIC_DATASET_PATH = DATA_DIR / "creditcard.csv"  # downloaded by you, not comm
 MODEL_PATH = MODELS_DIR / "fraud_model.joblib"
 METRICS_PATH = MODELS_DIR / "metrics.json"
 COMPARISON_PATH = MODELS_DIR / "model_comparison.json"
-
+DEMO_MODEL_PATH = MODELS_DIR / "demo_model.joblib"
+DEMO_METRICS_PATH = MODELS_DIR / "demo_metrics.json"
 # --- Reproducibility -----------------------------------------------------
 RANDOM_SEED = 42
 
