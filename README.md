@@ -2,7 +2,7 @@
 
 A machine learning application that scores card transactions from 0 to 100 and flags suspicious ones for analyst review, with a short explanation of what pushed each score up. Built with Python, scikit-learn and Streamlit.
 
-**Status:** working locally. Not yet deployed. [Add the live link here once it is.]
+**Status:** runs locally (not hosted). Clone the repo and follow "Install and run" below.
 
 ![Dashboard](docs/screenshots/dashboard.png)
 
@@ -35,6 +35,7 @@ Limitations: the V columns cannot be interpreted, there is no merchant, location
 3. Two models compared on validation data: Logistic Regression (baseline) and Random Forest, both with class weights for the rare fraud class.
 4. Threshold chosen on validation data from assumed costs of 100 per missed fraud and 2 per false alarm. Real costs would come from the business.
 5. The test set was used once, after choosing the model and threshold.
+6. Explanations: for one transaction, each feature is reset to its typical training value and the model is re-scored. The features whose reset lowers the score most are shown as reasons.
 
 ## Results
 
@@ -89,6 +90,8 @@ src/risk_scoring.py         0-100 score and categories
 src/explainability.py       per-transaction reasons
 src/synthetic_data.py       simulated demo transactions
 tests/                      pytest tests
+docs/screenshots/           images used in this README
+models/                     trained model and saved metrics
 ```
 
 ## Limitations and ethics
@@ -100,4 +103,4 @@ tests/                      pytest tests
 
 ## Future work
 
-Calibrated probabilities, gradient boosting, SHAP explanations, an analyst alert workflow with saved decisions, a demo model for the synthetic data, drift monitoring, and a React and Spring Boot version.
+A demo model for the simulated data so the app runs without the Kaggle file, calibrated probabilities, gradient boosting, SHAP explanations, an analyst alert workflow with saved decisions, drift monitoring, and a React and Spring Boot version.
